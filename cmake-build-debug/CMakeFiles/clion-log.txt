@@ -1,0 +1,4 @@
+/home/darocha/Downloads/CLion-2019.1.2/clion-2019.1.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" /home/darocha/CLionProjects/epDSID2
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/darocha/CLionProjects/epDSID2/cmake-build-debug
