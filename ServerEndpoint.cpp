@@ -8,6 +8,11 @@
 #include "model/AccountModel.h"
 #include <mutex>
 #include "service/AccountService.h"
+#include<pthread.h>
+
+//#define NUM_THREADS 10
+
+pthread_mutex_t account_mutex;
 
 using json = nlohmann::json;
 using namespace std;
@@ -23,22 +28,32 @@ std::string processRequest(std::string& request) {
     }
 }
 
+void *start_processing_thread(void *socket) {
+    ServerSocket* sock = (ServerSocket*) socket;
+
+
+    std::string request;
+    *sock >> request;
+    std::string response = processRequest(request);
+    *sock << response;
+}
+
 int main() {
     // Create the socket
     ServerSocket server(8080);
+
+    //pthread_t threads[NUM_THREADS];
+    //int active_threads = 0;
+
+    pthread_mutex_init(&account_mutex, NULL);
 
     while (true) {
 
         ServerSocket new_sock;
         server.accept(new_sock);
 
-        while (true) {
-            std::string request;
-            new_sock >> request;
-            std::string response = processRequest(request);
-            new_sock << response;
-        }
-
+        pthread_t new_thread;
+        pthread_create(&new_thread, NULL, &start_processing_thread, (void *)&new_sock);
 
     }
 

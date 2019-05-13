@@ -3,11 +3,14 @@
 //
 
 #include "AccountService.h"
+#include "../ServerEndpoint.h"
+#include <pthread.h>
+
 
 using json = nlohmann::json;
 
 std::string AccountService::createAccount(json request) {
-    Guard guard(accountsLock);
+    pthread_mutex_lock(&account_mutex);
 
     Account newAccount(
             move(request["name"].get<std::string>()),
@@ -15,6 +18,7 @@ std::string AccountService::createAccount(json request) {
             request["balance"].get<float>());
 
     accounts.push_back(newAccount);
+    pthread_mutex_unlock(&account_mutex);
 
     return request;
 }
