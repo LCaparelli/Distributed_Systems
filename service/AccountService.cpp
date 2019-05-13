@@ -9,18 +9,19 @@
 
 using json = nlohmann::json;
 
-std::string AccountService::createAccount(json request) {
+std::string AccountService::createAccount(std::string request) {
     pthread_mutex_lock(&account_mutex);
+    json j = json::parse(request);
 
     Account newAccount(
-            move(request["name"].get<std::string>()),
-            move(request["address"].get<std::string>()),
-            request["balance"].get<float>());
+            move(j["name"].get<std::string>()),
+            move(j["address"].get<std::string>()),
+            j["balance"].get<float>());
 
     accounts.push_back(newAccount);
     pthread_mutex_unlock(&account_mutex);
-
-    return request;
+    std::string response = "conta criada! nome: " + j["name"].get<std::string>();
+    return response;
 }
 
 std::string AccountService::findAccount(std::string name) {

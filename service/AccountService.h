@@ -13,7 +13,7 @@
 
 class AccountService {
 public:
-    std::string createAccount(nlohmann::json request);
+    std::string createAccount(std::string request);
     std::string findAccount(std::string name);
 
 private:
