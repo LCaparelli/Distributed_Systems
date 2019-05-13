@@ -32,18 +32,16 @@ std::string processRequest(std::string &request) {
 }
 
 void* start_processing_thread(void* arg) {
-    auto s = (ServerSocket*) arg;
-
-    ServerSocket new_sock;
-    s->accept(new_sock);
-
+    auto* sock = (ServerSocket*) arg;
+    std::string request;
     try {
-        std::string request;
-        new_sock >> request;
-        std::string response = processRequest(request);
-        new_sock << response;
+        *sock >> request;
+        if (!request.empty()) {
+            std::string response = processRequest(request);
+            *sock << response;
+        }
     } catch (SocketException& e) {
-        std::cout << e.description();
+        sock->close();
     }
 
 }
@@ -56,17 +54,17 @@ int main() {
     //int active_threads = 0;
 
     pthread_mutex_init(&account_mutex, nullptr);
-
     while (true) {
+        ServerSocket new_sock;
         try {
-            pthread_t new_thread;
-            pthread_create(&new_thread, nullptr, &start_processing_thread, &server);
-        } catch (SocketException &e) {
-            std::cout << e.description();
-        }
-
-
+            while (server.accept(new_sock)) {
+                pthread_t new_thread;
+                pthread_create(&new_thread, nullptr, &start_processing_thread, (void *) &new_sock);
+            }
+        } catch (SocketException& e) {}
     }
+
+
 
     return 0;
 }
