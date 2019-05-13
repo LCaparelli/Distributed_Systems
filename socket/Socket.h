@@ -1,9 +1,8 @@
-//
-// Created by darocha on 11/05/19.
-//
+// Definition of the Socket class
 
-#ifndef EPDSID2_SOCKET_H
-#define EPDSID2_SOCKET_H
+#ifndef Socket_class
+#define Socket_class
+
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -51,4 +50,4 @@ private:
 };
 
 
-#endif //EPDSID2_SOCKET_H
+#endif
