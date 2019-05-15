@@ -24,11 +24,14 @@ std::string processRequest(std::string &request) {
     json requestJson = json::parse(request);
     std::string operation = requestJson["operation"].get<std::string>();
     AccountService accountService;
+
     if (operation == "POST") {
         return accountService.createAccount(request);
     } else {
-        return accountService.findAccount(request);
+        string name = requestJson["name"].get<std::string>();
+        return accountService.findAccount(name);
     }
+
 }
 
 void* start_processing_thread(void* arg) {
@@ -50,16 +53,17 @@ int main() {
     // Create the socket
     ServerSocket server(8080);
 
+
     //pthread_t threads[NUM_THREADS];
     //int active_threads = 0;
 
-    pthread_mutex_init(&account_mutex, nullptr);
     while (true) {
         ServerSocket new_sock;
         try {
             while (server.accept(new_sock)) {
                 pthread_t new_thread;
                 pthread_create(&new_thread, nullptr, &start_processing_thread, (void *) &new_sock);
+                if (pthread_join(new_thread, nullptr)) continue;
             }
         } catch (SocketException& e) {}
     }

@@ -16,7 +16,7 @@ public:
     std::string createAccount(std::string request);
     std::string findAccount(std::string name);
 
-private:
+public:
     typedef std::mutex Lock;
     typedef std::lock_guard<Lock> Guard;
     Lock accountsLock;
