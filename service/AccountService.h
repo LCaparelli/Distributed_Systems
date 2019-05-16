@@ -20,6 +20,5 @@ public:
     typedef std::mutex Lock;
     typedef std::lock_guard<Lock> Guard;
     Lock accountsLock;
-    std::vector<Account> accounts;
 };
 #endif //EPDSID2_ACCOUNTSERVICE_H

@@ -17,7 +17,9 @@ std::string AccountService::createAccount(std::string request) {
             move(j["address"].get<std::string>()),
             j["balance"].get<float>());
 
+    pthread_mutex_lock(&account_mutex);
     accounts.push_back(newAccount);
+    pthread_mutex_unlock(&account_mutex);
 
     std::string response = "Account Created! \n name: " + j["name"].get<std::string>()
             + "\n address: " + j["address"].get<std::string>() +

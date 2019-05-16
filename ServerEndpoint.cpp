@@ -11,14 +11,20 @@
 #include<pthread.h>
 #include "socket/SocketException.h"
 #include <sys/socket.h>
+#include <queue>
 
 
-//#define NUM_THREADS 10
-
-pthread_mutex_t account_mutex;
+#define NUM_THREADS 10
 
 using json = nlohmann::json;
 using namespace std;
+
+pthread_mutex_t account_mutex;
+std::vector<Account> accounts;
+pthread_cond_t work_cond;
+pthread_mutex_t queue_mutex;
+
+queue<ServerSocket*> socket_FIFO_queue;
 
 std::string processRequest(std::string &request) {
     json requestJson = json::parse(request);
@@ -34,41 +40,53 @@ std::string processRequest(std::string &request) {
 
 }
 
-void* start_processing_thread(void* arg) {
-    auto* sock = (ServerSocket*) arg;
-    std::string request;
-    try {
-        *sock >> request;
-        if (!request.empty()) {
-            std::string response = processRequest(request);
-            *sock << response;
+void* work_on_request(void *arg) {
+    while (true) {
+        pthread_cond_wait(&work_cond, &queue_mutex);
+        auto* sock = socket_FIFO_queue.front();
+        socket_FIFO_queue.pop();
+        pthread_mutex_unlock(&queue_mutex);
+
+        std::string request;
+        try {
+            *sock >> request;
+            if (!request.empty()) {
+                std::string response = processRequest(request);
+                *sock << response;
+            }
+        } catch (SocketException& e) {
+            sock->close();
         }
-    } catch (SocketException& e) {
-        sock->close();
     }
 
 }
+
 
 int main() {
     // Create the socket
     ServerSocket server(8080);
 
+    pthread_mutex_init(&account_mutex, nullptr);
+    pthread_mutex_init(&queue_mutex, nullptr);
+    pthread_cond_init(&work_cond, nullptr);
 
-    //pthread_t threads[NUM_THREADS];
-    //int active_threads = 0;
+    // Initialize thread pool
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        pthread_t new_thread;
+        pthread_create(&new_thread, nullptr, work_on_request, nullptr);
+    }
+
 
     while (true) {
         ServerSocket new_sock;
         try {
             while (server.accept(new_sock)) {
-                pthread_t new_thread;
-                pthread_create(&new_thread, nullptr, &start_processing_thread, (void *) &new_sock);
-                if (pthread_join(new_thread, nullptr)) continue;
+                pthread_mutex_lock(&queue_mutex);
+                socket_FIFO_queue.push(&new_sock);
+                pthread_cond_signal(&work_cond);
             }
         } catch (SocketException& e) {}
     }
-
-
 
     return 0;
 }
