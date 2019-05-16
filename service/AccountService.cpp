@@ -28,10 +28,11 @@ std::string AccountService::createAccount(std::string request) {
 }
 
 std::string AccountService::findAccount(std::string name) {
-
+    pthread_mutex_lock(&account_mutex);
     auto it = std::find_if(accounts.begin(), accounts.end(), [&](const Account& account) {
         return account.name() == name;
     });
+    pthread_mutex_unlock(&account_mutex);
 
     if (it == end(accounts)) {
         return "Account doesn't exist";
