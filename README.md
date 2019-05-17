@@ -65,7 +65,7 @@ A informação que vem a seguir depende da operação. Para o POST, as três seg
   - Endereço
   - Saldo
 
-Caso a operação seja GET é inserida apenas mais uma única linha, informando o nome do titular.
+Caso a operação seja GET é inserida apenas mais uma única linha, informando o id da conta desejada.
 
 O cliente então é responsável por transformar essa entrada em um JSON seguindo os formatos a seguir:
 
@@ -79,7 +79,7 @@ O cliente então é responsável por transformar essa entrada em um JSON seguind
 
 >### GET
 >{  
->  "name": "nome",  
+>  "id": 1,  
 >  "operation": "GET"  
 >}
 
