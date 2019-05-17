@@ -35,7 +35,7 @@ Atualmente estão implementados no cliente e no servidor as operações de:
   - Criação
   - Obtenção
 
-Além disso toda *stack* de comunicação através dos *sockets* está implementada, bem como o *parsing* das requisições do lado do servidor e a implementação de paralelismo com base num pool de *threads* POSIX que permanecem bloqueadas enquanto não há requisições a serem processadas.
+Além disso toda *stack* de comunicação através dos *sockets* está implementada, bem como o *parsing* das requisições do lado do servidor, criação da requisição JSON do lado do cliente e a implementação de paralelismo com base num pool de *threads* POSIX que permanecem bloqueadas enquanto não há requisições a serem processadas.
 
 # Próximos passos
 
@@ -49,8 +49,8 @@ Recebimento do destino da conexão (endereço do servidor) como parâmetro do cl
 # Implementação
 
 ## Observação:
-Tanto no Client como no Server foi utilizado uma lib que provêm uma abstração para as operações com socket, além de uma
-lib para serizalização e deserialização de JSON.
+Tanto no Client como no Server foi utilizado uma biblioteca que provê uma abstração para as operações com *socket*, além de uma
+biblioteca para serizalização e deserialização de JSON.
 
 ## Cliente
 
@@ -103,3 +103,21 @@ Para implementação desta estratégia era necessário um meio de fornecer à *t
 Quando sinalizada, a *thread* acorda, consome o primeiro *socket* da fila e o utiliza para receber a requisição. Ela é então processada e a estrutura de contas em memória é alterada ou consultada. A resposta é então elaborada e escrita no *socket*. Feito isso a thread se bloqueia novamente até ser sinalizada outra vez.
 
 Mais detalhes da implementação podem ser encontrados nos comentários no código-fonte.
+
+# Compilação e execução
+
+Na pasta raiz do servidor, execute:
+
+> $ g++ -pthread -o EPDSID ServerEndpoint.cpp socket/Socket.cpp socket/Socket.h socket/ServerSocket.cpp socket/ServerSocket.h model/AccountModel.cpp service/AccountService.cpp service/AccountService.h ServerEndpoint.h socket/SocketException.h
+
+O produto binário é o arquivo "EPDSID". O execute para iniciar o servidor. Este estará ouvindo na interface de *loopback* (127.0.0.1) na porta 8080/tcp.
+
+> $ ./EPDSID
+
+Na pasta raiz do cliente, execute:
+
+> $ g++ -o client main.cpp socket/ClientSocket.cpp socket/Socket.cpp
+
+O produto binário é o arquivo "client". O execute para iniciar o cliente. Este irá tentar conexão em 127.0.0.1:8080. Caso não estabeleça conexão, a execução é abortada.
+
+> $ ./client
