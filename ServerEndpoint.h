@@ -1,4 +1,6 @@
 #include <pthread.h>
+#include <vector>
+#include "model/AccountModel.h"
 
 #ifndef EPDSID2_SERVERENDPOINT_H
 #define EPDSID2_SERVERENDPOINT_H
