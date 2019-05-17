@@ -6,7 +6,7 @@
 
 class Account {
 public:
-    Account(std::string name, std::string address, float balance);
+    Account(long id, std::string name, std::string address, float balance);
 
     std::string address() const;
 
@@ -14,12 +14,15 @@ public:
 
     float balance() const;
 
+    long id() const;
+
     std::string toJSON() const;
 
 private:
     std::string name_;
     std::string address_;
     float balance_;
+    long id_;
 };
 
 #endif //EPDSID_ACCOUNTMODEL_H

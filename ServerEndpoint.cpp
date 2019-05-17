@@ -7,6 +7,7 @@
 #include "service/AccountService.h"
 #include<pthread.h>
 #include "socket/SocketException.h"
+#include "ServerEndpoint.h"
 #include <sys/socket.h>
 #include <queue>
 
@@ -25,6 +26,8 @@ pthread_mutex_t queue_mutex;
 // Global data structure keeping accounts
 std::vector<Account> accounts;
 
+long global_id = 0;
+
 // Global socket queue to be used by threads
 queue<ServerSocket*> socket_FIFO_queue;
 
@@ -39,8 +42,8 @@ std::string processRequest(std::string &request) {
     if (operation == "POST") {
         return accountService.createAccount(request);
     } else {
-        string name = requestJson["name"].get<std::string>();
-        return accountService.findAccount(name);
+        long id = requestJson["id"].get<long>();
+        return accountService.findAccount(id);
     }
 
 }

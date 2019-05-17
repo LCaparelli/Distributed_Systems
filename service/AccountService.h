@@ -14,7 +14,7 @@
 class AccountService {
 public:
     std::string createAccount(std::string request);
-    std::string findAccount(std::string name);
+    std::string findAccount(long id);
 
 public:
     typedef std::mutex Lock;

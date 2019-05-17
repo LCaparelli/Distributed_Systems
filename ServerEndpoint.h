@@ -10,3 +10,5 @@
 extern pthread_mutex_t account_mutex;
 
 extern std::vector<Account> accounts;
+
+extern long global_id;
