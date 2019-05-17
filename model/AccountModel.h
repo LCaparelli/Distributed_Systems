@@ -1,7 +1,3 @@
-//
-// Created by darocha on 10/05/19.
-//
-
 #ifndef EPDSID_ACCOUNTMODEL_H
 #define EPDSID_ACCOUNTMODEL_H
 

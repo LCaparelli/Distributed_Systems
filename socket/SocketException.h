@@ -1,13 +1,12 @@
 // SocketException class
-
+//Class used to provide exceptions in socket use, used to log errors
 
 #ifndef SocketException_class
 #define SocketException_class
 
 #include <string>
 
-class SocketException
-{
+class SocketException {
 public:
     SocketException ( std::string s ) : m_s ( s ) {};
     ~SocketException (){};

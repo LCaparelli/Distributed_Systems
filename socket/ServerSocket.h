@@ -6,8 +6,7 @@
 #include "Socket.h"
 
 
-class ServerSocket : public Socket
-{
+class ServerSocket : public Socket {
 public:
 
     ServerSocket ( int port );

@@ -1,6 +1,3 @@
-//
-// Created by lcaparel on 12/05/19.
-//
 #include <pthread.h>
 
 #ifndef EPDSID2_SERVERENDPOINT_H

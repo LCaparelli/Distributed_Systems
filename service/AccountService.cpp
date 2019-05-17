@@ -1,14 +1,10 @@
-//
-// Created by darocha on 11/05/19.
-//
-
 #include "AccountService.h"
 #include "../ServerEndpoint.h"
 #include <pthread.h>
 
-
 using json = nlohmann::json;
 
+//function to create accounts, it parses the request and puts a new account in the vector
 std::string AccountService::createAccount(std::string request) {
     json j = json::parse(request);
 
@@ -27,6 +23,7 @@ std::string AccountService::createAccount(std::string request) {
     return response;
 }
 
+//function to find an account, given the accounts owner name
 std::string AccountService::findAccount(std::string name) {
     pthread_mutex_lock(&account_mutex);
     auto it = std::find_if(accounts.begin(), accounts.end(), [&](const Account& account) {

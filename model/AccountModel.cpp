@@ -1,14 +1,10 @@
-//
-// Created by darocha on 10/05/19.
-//
-
 #include "AccountModel.h"
 #include "../json/single_include/nlohmann/json.hpp"
 
 using json = nlohmann::json;
 using namespace std;
 
-
+//Account data structure
 Account::Account(string name, string address, float balance)
         : name_(move(name)), address_(move(address)), balance_(balance) {}
 

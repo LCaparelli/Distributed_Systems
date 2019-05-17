@@ -1,6 +1,3 @@
-//
-// Created by darocha on 11/05/19.
-//
 #include "socket/ServerSocket.h"
 #include <string>
 #include <iostream>
@@ -121,7 +118,7 @@ int main() {
     }
 
     /*
-     * This program ca only be interrupted via signals, usually signal 2 (SIGINT) from
+     * This program can only be interrupted via signals, usually signal 2 (SIGINT) from
      * user interrupt (Ctrl+C) or signals 9 (SIGKILL) and 15 (SIGTERM). Due to that we
      * don't add a return statement for main nor do we destruct the mutexes,
      * condition variables and threads, as they will all be reclaimed by the OS once
