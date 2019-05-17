@@ -29,6 +29,9 @@ public:
     bool listen() const;
     bool accept ( Socket& ) const;
 
+    // Client initialization
+    bool connect ( const std::string host, const int port );
+
     // Data Transimission
     bool send ( const std::string ) const;
     int recv ( std::string& ) const;
