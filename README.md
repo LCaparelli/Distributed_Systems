@@ -48,6 +48,10 @@ Recebimento do destino da conexão (endereço do servidor) como parâmetro do cl
 
 # Implementação
 
+## Observação:
+Tanto no Client como no Server foi utilizado uma lib que provêm uma abstração para as operações com socket, além de uma
+lib para serizalização e deserialização de JSON.
+
 ## Cliente
 
 A entrada é primeiramente recebida pelo cliente através da entrada padrão, recebendo um parâmetro por linha. A primeira linha contém a operação a ser realizada, sendo os possíveis valores no estado atual:
