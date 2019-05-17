@@ -66,17 +66,17 @@ Caso a operação seja GET é inserida apenas mais uma única linha, informando 
 O cliente então é responsável por transformar essa entrada em um JSON seguindo os formatos a seguir:
 
 >### POST
->{
->  "name": "nome",
->  "address": "endereço",
->  "balance": 0,
->  "operation": "POST"
+>{  
+>  "name": "nome",  
+>  "address": "endereço",  
+>  "balance": 0,  
+>  "operation": "POST"  
 >}
 
 >### GET
->{
->  "name": "nome",
->  "operation": "GET"
+>{  
+>  "name": "nome",  
+>  "operation": "GET"  
 >}
 
 A requisição em formato JSON é escrita no *socket* aberto com destino ao servidor na porta 8080. Na implementação atual o destino é 127.0.0.1, a interface de *loopback*, então o servidor deve estar sendo executado previamente no mesmo *host* para que obtenha-se sucesso na criação do socket.
