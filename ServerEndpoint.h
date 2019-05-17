@@ -8,6 +8,7 @@
 #endif //EPDSID2_SERVERENDPOINT_H
 
 extern pthread_mutex_t account_mutex;
+extern pthread_mutex_t id_mutex;
 
 extern std::vector<Account> accounts;
 

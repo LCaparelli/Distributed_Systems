@@ -15,7 +15,11 @@ std::string floatToString(float val) {
 //function to create accounts, it parses the request and puts a new account in the vector
 std::string AccountService::createAccount(std::string request) {
     json j = json::parse(request);
+
+    pthread_mutex_lock(&id_mutex);
     global_id++;
+    pthread_mutex_unlock(&id_mutex);
+
     Account newAccount(
             global_id,
             move(j["name"].get<std::string>()),

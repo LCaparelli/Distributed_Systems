@@ -22,6 +22,7 @@ using namespace std;
 pthread_mutex_t account_mutex;
 pthread_cond_t work_cond;
 pthread_mutex_t queue_mutex;
+pthread_mutex_t id_mutex;
 
 // Global data structure keeping accounts
 std::vector<Account> accounts;
