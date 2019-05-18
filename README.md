@@ -116,8 +116,54 @@ O produto binário é o arquivo "EPDSID". O execute para iniciar o servidor. Est
 
 Na pasta raiz do cliente, execute:
 
-> $ g++ -o client main.cpp socket/ClientSocket.cpp socket/Socket.cpp
+> $ g++ -o cliente main.cpp socket/ClientSocket.cpp socket/Socket.cpp
 
 O produto binário é o arquivo "client". O execute para iniciar o cliente. Este irá tentar conexão em 127.0.0.1:8080. Caso não estabeleça conexão, a execução é abortada.
 
-> $ ./client
+> $ ./cliente
+
+# Exemplos de uso
+
+Depois de iniciado o servidor:
+
+> $ ./EPDSID
+
+Iniciar o cliente:
+
+> $ ./cliente
+
+Insira na entrada padrão do processo do cliente:
+
+> POST
+> Ana
+> Rua 3
+> 1000
+
+O output deve ser:
+
+>Account Created!
+> id: 1
+> name: Ana
+> address: Rua 3
+> balance: 1000
+
+Então podemos utilizar esse output para consultar uma conta usando o ID que foi atribuído:
+
+> GET
+> 1
+
+Deve retornar:
+
+>Found account!
+> name: Ana
+> address: Rua 3
+> balance: 1000
+
+Ao buscarmos uma conta não existente:
+
+> GET
+> 10000
+
+Temos:
+
+>Account doesn't exist.
