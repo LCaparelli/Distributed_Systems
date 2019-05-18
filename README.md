@@ -106,17 +106,18 @@ Mais detalhes da implementação podem ser encontrados nos comentários no códi
 
 # Compilação e execução
 
-Na pasta raiz do servidor, execute:
+Na pasta raiz do projeto, execute:
 
-> $ g++ -pthread -o EPDSID ServerEndpoint.cpp socket/Socket.cpp socket/Socket.h socket/ServerSocket.cpp socket/ServerSocket.h model/AccountModel.cpp service/AccountService.cpp service/AccountService.h ServerEndpoint.h socket/SocketException.h
+> $ g++ -pthread -o servidor server/ServerEndpoint.cpp socket/Socket.cpp socket/Socket.h socket/ServerSocket.cpp socket/ServerSocket.h server/model/AccountModel.cpp server/service/AccountService.cpp
+
 
 O produto binário é o arquivo "EPDSID". O execute para iniciar o servidor. Este estará ouvindo na interface de *loopback* (127.0.0.1) na porta 8080/tcp.
 
-> $ ./EPDSID
+> $ ./servidor
 
-Na pasta raiz do cliente, execute:
+Na pasta raiz do projeto, execute:
 
-> $ g++ -o cliente main.cpp socket/ClientSocket.cpp socket/Socket.cpp
+> $ g++ -o cliente client/main.cpp socket/ClientSocket.cpp socket/Socket.cpp
 
 O produto binário é o arquivo "client". O execute para iniciar o cliente. Este irá tentar conexão em 127.0.0.1:8080. Caso não estabeleça conexão, a execução é abortada.
 
@@ -126,7 +127,7 @@ O produto binário é o arquivo "client". O execute para iniciar o cliente. Este
 
 Depois de iniciado o servidor:
 
-> $ ./EPDSID
+> $ ./servidor
 
 Iniciar o cliente:
 
