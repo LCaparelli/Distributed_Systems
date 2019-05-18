@@ -23,16 +23,17 @@ int main() {
 std::string getRequest() {
     std::string operation, name, address, balance, request, id;
 
-    std::cin >> operation;
+    std::getline(std::cin, operation);
     if (operation == "GET") {
-        std::cin >> id;
+        std::getline(std::cin, id);
+
 
         request = "{\"operation\":\"" + operation +
                   "\",\"id\":" + id + "}";
     } else {
-        std::cin >> name;
-        std::cin >> address;
-        std::cin >> balance;
+        std::getline(std::cin, name);
+        std::getline(std::cin, address);
+        std::getline(std::cin, balance);
 
         request = "{\"operation\":\"" + operation +
                   "\",\"name\":\"" + name +
