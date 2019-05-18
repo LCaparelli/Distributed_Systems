@@ -34,7 +34,7 @@ std::string AccountService::createAccount(std::string request) {
 
     pthread_mutex_unlock(&account_mutex);
 
-    response = "Account Created! \n id: " + std::to_string(global_id)
+    response = "Account created! \n id: " + std::to_string(global_id)
             + "\n name: " + j["name"].get<std::string>()
             + "\n address: " + j["address"].get<std::string>() +
             "\n balance: " + floatToString(j["balance"].get<float>());
@@ -51,10 +51,14 @@ std::string AccountService::findAccount(long id) {
     pthread_mutex_unlock(&account_mutex);
 
     if (it == end(accounts)) {
-        return "Account doesn't exist";
+        return "Account doesn't exist.";
     } else {
         const auto& foundAccount = *it;
-        return foundAccount.toJSON();
+
+        std::string response = "Found account!\n name: " + foundAccount.name()
+                   + "\n address: " + foundAccount.address() +
+                   "\n balance: " + floatToString(foundAccount.balance());
+        return response;
     }
 
 }
