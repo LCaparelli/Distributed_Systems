@@ -24,6 +24,18 @@ long Account::id() const {
     return id_;
 }
 
+void Account::setAddress(string address) {
+    address_ = move(address);
+}
+
+void Account::setName(string name) {
+    name_ = move(name);
+}
+
+void Account::setBalance(float balance) {
+    balance_ = balance;
+}
+
 string Account::toJSON() const {
     json j;
     j["id"] = id();

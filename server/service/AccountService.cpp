@@ -3,6 +3,8 @@
 #include <pthread.h>
 #include <sstream>
 
+#define INVALID_BALANCE 999999999999
+
 using json = nlohmann::json;
 
 
@@ -42,15 +44,18 @@ std::string AccountService::createAccount(std::string request) {
     return response;
 }
 
+
+bool AccountService::doesAccountExists(std::vector<Account, std::allocator<Account>>::iterator it) {
+    return !(it == end(accounts));
+}
+
+
 //function to find an account, given the accounts owner name
 std::string AccountService::findAccount(long id) {
-    pthread_mutex_lock(&account_mutex);
-    auto it = std::find_if(accounts.begin(), accounts.end(), [&](const Account& account) {
-        return account.id() == id;
-    });
-    pthread_mutex_unlock(&account_mutex);
+    auto it = getAccountIterator(id);
+    bool accountExists = doesAccountExists(it);
 
-    if (it == end(accounts)) {
+    if (!accountExists) {
         return "Account doesn't exist.";
     } else {
         const auto& foundAccount = *it;
@@ -61,4 +66,59 @@ std::string AccountService::findAccount(long id) {
         return response;
     }
 
+}
+
+
+std::vector<Account, std::allocator<Account>>::iterator AccountService::getAccountIterator(long id) const {
+    pthread_mutex_lock(&account_mutex);
+    auto it = find_if(accounts.begin(), accounts.end(), [&](const Account& account) {
+        return account.id() == id;
+    });
+    pthread_mutex_unlock(&account_mutex);
+    return it;
+}
+
+
+std::string AccountService::updateAccount(long id, Account updateAccount) {
+    auto it = getAccountIterator(id);
+    bool accountExists = doesAccountExists(it);
+
+    if (!accountExists) {
+        return "Account doesn't exist.";
+    } else {
+
+        auto& foundAccount = *it;
+
+        if (!updateAccount.address().empty()) {
+            foundAccount.setAddress(updateAccount.address());
+        }
+
+        if (updateAccount.balance() != INVALID_BALANCE) {
+            foundAccount.setBalance(updateAccount.balance());
+        }
+
+        if (!updateAccount.name().empty()) {
+            foundAccount.setName(updateAccount.name());
+        }
+
+
+        std::string response = "Account Updated!\n name: " + foundAccount.name()
+                               + "\n address: " + foundAccount.address() +
+                               "\n balance: " + floatToString(foundAccount.balance());
+        return response;
+    }
+}
+
+std::string AccountService::deleteAccount(long id) {
+    auto it = getAccountIterator(id);
+    bool accountExists = doesAccountExists(it);
+
+    if (!accountExists) {
+        return "Account doesn't exist.";
+    } else {
+        pthread_mutex_lock(&account_mutex);
+        accounts.erase(it);
+        pthread_mutex_lock(&account_mutex);
+        return "Account Deleted;";
+    }
 }

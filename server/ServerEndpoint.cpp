@@ -41,10 +41,30 @@ std::string processRequest(std::string &request) {
     AccountService accountService;
 
     if (operation == "POST") {
+
         return accountService.createAccount(request);
-    } else {
+
+    } else if (operation == "GET") {
+
         long id = requestJson["id"].get<long>();
         return accountService.findAccount(id);
+
+    } else if (operation == "DELETE") {
+
+        long id = requestJson["id"].get<long>();
+        return accountService.deleteAccount(id);
+
+    } else if (operation == "PUT") {
+
+        Account updateAccount(
+                0,
+                move(requestJson["name"].get<std::string>()),
+                move(requestJson["address"].get<std::string>()),
+                requestJson["balance"].get<float>());
+
+        return accountService.updateAccount(
+                requestJson["id"].get<long>(),
+                updateAccount);
     }
 
 }

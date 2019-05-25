@@ -8,13 +8,20 @@ class Account {
 public:
     Account(long id, std::string name, std::string address, float balance);
 
-    std::string address() const;
+    std::string address() const ;
 
-    std::string name() const;
+    std::string name() const ;
 
-    float balance() const;
+    float balance() const ;
 
-    long id() const;
+    long id() const ;
+
+    void setAddress(std::string address) ;
+
+    void setName(std::string name) ;
+
+    void setBalance(float balance) ;
+
 
     std::string toJSON() const;
 
