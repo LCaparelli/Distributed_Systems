@@ -43,7 +43,11 @@ std::string AccountService::createAccount(std::string request) {
 
 
 bool AccountService::doesAccountExists(std::vector<Account, std::allocator<Account>>::iterator it) {
-    return !(it == end(accounts));
+    pthread_mutex_lock(&account_mutex);
+    const std::vector<Account, std::allocator<Account>>::iterator &accountsEnd = end(accounts);
+    pthread_mutex_unlock(&account_mutex);
+
+    return !(it == accountsEnd);
 }
 
 
@@ -84,11 +88,15 @@ std::string AccountService::updateAccount(long id, Account updateAccount) {
         return "Account doesn't exist.";
     } else {
 
+        pthread_mutex_lock(&account_mutex);
+
         auto& foundAccount = *it;
 
         foundAccount.setAddress(updateAccount.address());
         foundAccount.setBalance(updateAccount.balance());
         foundAccount.setName(updateAccount.name());
+
+        pthread_mutex_unlock(&account_mutex);
 
         std::string response = "Account Updated!\n id:" + std::to_string(id) +
                                "\n name: " + foundAccount.name()
