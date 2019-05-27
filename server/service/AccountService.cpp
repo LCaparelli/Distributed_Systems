@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <sstream>
 
-#define INVALID_BALANCE 999999999999
 
 using json = nlohmann::json;
 
@@ -31,9 +30,7 @@ std::string AccountService::createAccount(std::string request) {
     std::string response;
 
     pthread_mutex_lock(&account_mutex);
-
     accounts.push_back(newAccount);
-
     pthread_mutex_unlock(&account_mutex);
 
     response = "Account created! \n id: " + std::to_string(global_id)
@@ -89,18 +86,9 @@ std::string AccountService::updateAccount(long id, Account updateAccount) {
 
         auto& foundAccount = *it;
 
-        if (!updateAccount.address().empty()) {
-            foundAccount.setAddress(updateAccount.address());
-        }
-
-        if (updateAccount.balance() != INVALID_BALANCE) {
-            foundAccount.setBalance(updateAccount.balance());
-        }
-
-        if (!updateAccount.name().empty()) {
-            foundAccount.setName(updateAccount.name());
-        }
-
+        foundAccount.setAddress(updateAccount.address());
+        foundAccount.setBalance(updateAccount.balance());
+        foundAccount.setName(updateAccount.name());
 
         std::string response = "Account Updated!\n name: " + foundAccount.name()
                                + "\n address: " + foundAccount.address() +

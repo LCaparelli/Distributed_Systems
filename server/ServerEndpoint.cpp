@@ -3,9 +3,8 @@
 #include <iostream>
 #include "json/single_include/nlohmann/json.hpp"
 #include "model/AccountModel.h"
-#include <mutex>
 #include "service/AccountService.h"
-#include<pthread.h>
+#include <pthread.h>
 #include "../socket/SocketException.h"
 #include "ServerEndpoint.h"
 #include <sys/socket.h>
