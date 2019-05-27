@@ -23,9 +23,8 @@ std::string getRequest() {
     std::string operation, name, address, balance, request, id;
 
     std::getline(std::cin, operation);
-    if (operation == "GET") {
+    if (operation == "GET" || operation == "DELETE") {
         std::getline(std::cin, id);
-
 
         request = "{\"operation\":\"" + operation +
                   "\",\"id\":" + id + "}";
@@ -39,10 +38,35 @@ std::string getRequest() {
                   "\",\"address\":\"" + address +
                   "\", \"balance\":" + balance +
                   "}";
+    } else if(operation == "PUT") {
+        std::getline(std::cin, id);
+        std::getline(std::cin, name);
+        std::getline(std::cin, address);
+        std::getline(std::cin, balance);
+
+        request = "{\"operation\":\"" + operation +
+                  "\",\"id\":" + id +
+                  ",\"name\":\"" + name +
+                  "\",\"address\":\"" + address +
+                  "\", \"balance\":" + balance +
+                  "}";
     } else {
-        std::cout << "Uso indevido. Operações permitidas:\nGET\n<id>\n************\nPOST\n<nome>\n<endereço>\n<saldo>\n";
+        std::string error = "Uso indevido. Operações permitidas:\n"
+                            "GET|DELETE\n"
+                            "<id>\n"
+                            "***********************************\n"
+                            "POST\n"
+                            "<nome>\n"
+                            "<endereço>\n"
+                            "<saldo>\n"
+                            "***********************************\n"
+                            "PUT\n"
+                            "<id>\n"
+                            "<nome>\n"
+                            "<endereço>\n"
+                            "<saldo>\n";
+        std::cerr << error;
         exit(1);
     }
-
     return request;
 }

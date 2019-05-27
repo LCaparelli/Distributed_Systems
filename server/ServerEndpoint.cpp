@@ -61,7 +61,7 @@ std::string processRequest(std::string &request) {
     } else if (operation == "PUT") {
 
         Account updateAccount(
-                0,
+                requestJson["id"].get<long>(),
                 move(requestJson["name"].get<std::string>()),
                 move(requestJson["address"].get<std::string>()),
                 requestJson["balance"].get<float>());

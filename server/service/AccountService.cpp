@@ -90,7 +90,8 @@ std::string AccountService::updateAccount(long id, Account updateAccount) {
         foundAccount.setBalance(updateAccount.balance());
         foundAccount.setName(updateAccount.name());
 
-        std::string response = "Account Updated!\n name: " + foundAccount.name()
+        std::string response = "Account Updated!\n id:" + std::to_string(id) +
+                               "\n name: " + foundAccount.name()
                                + "\n address: " + foundAccount.address() +
                                "\n balance: " + floatToString(foundAccount.balance());
         return response;
@@ -106,7 +107,7 @@ std::string AccountService::deleteAccount(long id) {
     } else {
         pthread_mutex_lock(&account_mutex);
         accounts.erase(it);
-        pthread_mutex_lock(&account_mutex);
-        return "Account Deleted;";
+        pthread_mutex_unlock(&account_mutex);
+        return "Account Deleted.";
     }
 }
