@@ -7,17 +7,15 @@
 std::string getRequest();
 
 int main() {
-    ClientSocket client_socket("localhost", 8080);
+    while (true) {
+        ClientSocket client_socket("localhost", 8080);
+        auto request = getRequest();
 
-    auto request = getRequest();
+        client_socket << request;
+        client_socket >> request;
 
-    client_socket << request;
-    client_socket >> request;
-
-    std::cout << request << std::endl;
-
-    return 0;
-
+        std::cout << request << "\n\n";
+    }
 }
 
 
