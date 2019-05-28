@@ -39,39 +39,39 @@ Logger logger;
 // Global socket queue to be used by threads
 queue<ServerSocket*> socket_FIFO_queue;
 
-std::string processRequest(std::string &request) {
+std::string process_request(std::string &request) {
     // Parse request string into json object
-    json requestJson = json::parse(request);
+    json request_JSON = json::parse(request);
     // Fetches operation from request
-    std::string operation = requestJson["operation"].get<std::string>();
+    std::string operation = request_JSON["operation"].get<std::string>();
 
     AccountService accountService;
 
     if (operation == "POST") {
 
-        return accountService.createAccount(request);
+        return accountService.create_account(request);
 
     } else if (operation == "GET") {
 
-        long id = requestJson["id"].get<long>();
-        return accountService.findAccount(id);
+        long id = request_JSON["id"].get<long>();
+        return accountService.find_account(id);
 
     } else if (operation == "DELETE") {
 
-        long id = requestJson["id"].get<long>();
-        return accountService.deleteAccount(id);
+        long id = request_JSON["id"].get<long>();
+        return accountService.delete_account(id);
 
     } else if (operation == "PUT") {
 
-        Account updateAccount(
-                requestJson["id"].get<long>(),
-                move(requestJson["name"].get<std::string>()),
-                move(requestJson["address"].get<std::string>()),
-                requestJson["balance"].get<float>());
+        Account update_account(
+                request_JSON["id"].get<long>(),
+                move(request_JSON["name"].get<std::string>()),
+                move(request_JSON["address"].get<std::string>()),
+                request_JSON["balance"].get<float>());
 
-        return accountService.updateAccount(
-                requestJson["id"].get<long>(),
-                updateAccount);
+        return accountService.update_account(
+                request_JSON["id"].get<long>(),
+                update_account);
     }
 
 }
@@ -91,7 +91,7 @@ void* create_ephemeral_thread(void* arg) {
 
         if (!request.empty()) {
             // Process request and stores response
-            std::string response = processRequest(request);
+            std::string response = process_request(request);
             // Writes response to socket stream
 
             logger.write_to_log("Resposta: " + response);
@@ -148,7 +148,7 @@ void* work_on_request(void *id) {
             logger.write_to_log("Thread com id "+ thread_id + " recebendo requisição: " + request);
             if (!request.empty()) {
                 // Process request and stores response
-                std::string response = processRequest(request);
+                std::string response = process_request(request);
                 logger.write_to_log("Resposta: " + response);
                 logger.flush_logs_to_file();
                 // Writes response to socket stream
@@ -182,8 +182,10 @@ int main() {
     // Initialize thread pool
     for (long i = 0; i < NUM_THREADS; ++i) {
         pthread_t new_thread;
+        
         logger.write_to_log("Criando thread " + std::to_string(i) + " no pool de threads.");
         logger.flush_logs_to_file();
+        
         pthread_create(&new_thread, nullptr, work_on_request, (void*) &i);
     }
 

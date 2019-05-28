@@ -16,11 +16,11 @@ public:
 
     long id() const ;
 
-    void setAddress(std::string address) ;
+    void set_address(std::string address) ;
 
-    void setName(std::string name) ;
+    void set_name(std::string name) ;
 
-    void setBalance(float balance) ;
+    void set_balance(float balance) ;
 
 
     std::string toJSON() const;

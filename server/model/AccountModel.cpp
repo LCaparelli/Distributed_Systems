@@ -24,15 +24,15 @@ long Account::id() const {
     return id_;
 }
 
-void Account::setAddress(string address) {
+void Account::set_address(string address) {
     address_ = move(address);
 }
 
-void Account::setName(string name) {
+void Account::set_name(string name) {
     name_ = move(name);
 }
 
-void Account::setBalance(float balance) {
+void Account::set_balance(float balance) {
     balance_ = balance;
 }
 

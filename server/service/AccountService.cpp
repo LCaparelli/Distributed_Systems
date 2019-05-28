@@ -14,7 +14,7 @@ std::string floatToString(float val) {
 }
 
 //function to create accounts, it parses the request and puts a new account in the vector
-std::string AccountService::createAccount(std::string request) {
+std::string AccountService::create_account(std::string request) {
     json j = json::parse(request);
 
     pthread_mutex_lock(&id_mutex);
@@ -42,7 +42,7 @@ std::string AccountService::createAccount(std::string request) {
 }
 
 
-bool AccountService::doesAccountExists(std::vector<Account, std::allocator<Account>>::iterator it) {
+bool AccountService::does_account_exists(std::vector<Account, std::allocator<Account>>::iterator it) {
     pthread_mutex_lock(&account_mutex);
     const std::vector<Account, std::allocator<Account>>::iterator &accountsEnd = end(accounts);
     pthread_mutex_unlock(&account_mutex);
@@ -52,9 +52,9 @@ bool AccountService::doesAccountExists(std::vector<Account, std::allocator<Accou
 
 
 //function to find an account, given the accounts owner name
-std::string AccountService::findAccount(long id) {
-    auto it = getAccountIterator(id);
-    bool accountExists = doesAccountExists(it);
+std::string AccountService::find_account(long id) {
+    auto it = get_account_iterator(id);
+    bool accountExists = does_account_exists(it);
 
     if (!accountExists) {
         return "Account doesn't exist.";
@@ -70,7 +70,7 @@ std::string AccountService::findAccount(long id) {
 }
 
 
-std::vector<Account, std::allocator<Account>>::iterator AccountService::getAccountIterator(long id) const {
+std::vector<Account, std::allocator<Account>>::iterator AccountService::get_account_iterator(long id) const {
     pthread_mutex_lock(&account_mutex);
     auto it = find_if(accounts.begin(), accounts.end(), [&](const Account& account) {
         return account.id() == id;
@@ -80,9 +80,9 @@ std::vector<Account, std::allocator<Account>>::iterator AccountService::getAccou
 }
 
 
-std::string AccountService::updateAccount(long id, Account updateAccount) {
-    auto it = getAccountIterator(id);
-    bool accountExists = doesAccountExists(it);
+std::string AccountService::update_account(long id, Account update_account) {
+    auto it = get_account_iterator(id);
+    bool accountExists = does_account_exists(it);
 
     if (!accountExists) {
         return "Account doesn't exist.";
@@ -92,9 +92,9 @@ std::string AccountService::updateAccount(long id, Account updateAccount) {
 
         auto& foundAccount = *it;
 
-        foundAccount.setAddress(updateAccount.address());
-        foundAccount.setBalance(updateAccount.balance());
-        foundAccount.setName(updateAccount.name());
+        foundAccount.set_address(update_account.address());
+        foundAccount.set_balance(update_account.balance());
+        foundAccount.set_name(update_account.name());
 
         pthread_mutex_unlock(&account_mutex);
 
@@ -106,9 +106,9 @@ std::string AccountService::updateAccount(long id, Account updateAccount) {
     }
 }
 
-std::string AccountService::deleteAccount(long id) {
-    auto it = getAccountIterator(id);
-    bool accountExists = doesAccountExists(it);
+std::string AccountService::delete_account(long id) {
+    auto it = get_account_iterator(id);
+    bool accountExists = does_account_exists(it);
 
     if (!accountExists) {
         return "Account doesn't exist.";

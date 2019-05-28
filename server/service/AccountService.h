@@ -12,11 +12,11 @@
 
 class AccountService {
 public:
-    std::string createAccount(std::string request);
-    std::string findAccount(long id);
-    std::string updateAccount(long id, Account updateAccount);
-    std::string deleteAccount(long id);
-    bool doesAccountExists(std::vector<Account, std::allocator<Account>>::iterator it);
-    std::vector<Account, std::allocator<Account>>::iterator getAccountIterator(long id) const;
+    std::string create_account(std::string request);
+    std::string find_account(long id);
+    std::string update_account(long id, Account update_account);
+    std::string delete_account(long id);
+    bool does_account_exists(std::vector<Account, std::allocator<Account>>::iterator it);
+    std::vector<Account, std::allocator<Account>>::iterator get_account_iterator(long id) const;
 };
 #endif //EPDSID2_ACCOUNTSERVICE_H
