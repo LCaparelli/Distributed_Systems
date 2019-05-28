@@ -17,7 +17,7 @@ private:
     std::stringstream buffer;
     std::ofstream log_file;
     pthread_mutex_t log_mutex;
-    std::time_t get_timestamp;
+    std::string get_timestamp();
 };
 
 #endif //EPDSID2_LOGGER_H
