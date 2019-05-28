@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iostream>
+#include <algorithm>
 #include "../socket/ClientSocket.h"
 #include "../socket/SocketException.h"
 
@@ -17,6 +18,11 @@ int main() {
 
     return 0;
 
+}
+
+
+bool is_digits(const std::string &str) {
+    return std::all_of(str.begin(), str.end(), ::isdigit);
 }
 
 std::string getRequest() {
@@ -43,6 +49,11 @@ std::string getRequest() {
         std::cout << "Digite o saldo:";
         std::getline(std::cin, balance);
 
+        if (!is_digits(balance)) {
+            std::cerr << "Valor inválido, \"balance\" deve conter somente dígitos.";
+            exit(1);
+        }
+
         request = "{\"operation\":\"" + operation +
                   "\",\"name\":\"" + name +
                   "\",\"address\":\"" + address +
@@ -61,6 +72,11 @@ std::string getRequest() {
 
         std::cout << "Digite o saldo:";
         std::getline(std::cin, balance);
+
+        if (!is_digits(balance)) {
+            std::cerr << "Valor inválido, \"balance\" deve conter somente dígitos.";
+            exit(1);
+        }
 
         request = "{\"operation\":\"" + operation +
                   "\",\"id\":" + id +
