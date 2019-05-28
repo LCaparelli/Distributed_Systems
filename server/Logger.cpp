@@ -8,6 +8,7 @@
 
 #define LOG_PATH "../logs/logs.txt"
 
+//writes the log_entry to the buffer
 void Logger::write_to_log(std::string log_entry) {
     std::time_t current_time = std::time(nullptr);
     auto timestamp = ctime(&current_time);
@@ -15,6 +16,7 @@ void Logger::write_to_log(std::string log_entry) {
     buffer << timestamp << ": " << log_entry + "\n";
 }
 
+//writes the contents of the buffer to a file
 void Logger::flush_logs_to_file() {
     pthread_mutex_lock(&log_mutex);
     log_file.open (LOG_PATH, std::ios_base::app);

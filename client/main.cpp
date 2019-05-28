@@ -21,16 +21,26 @@ int main() {
 
 std::string getRequest() {
     std::string operation, name, address, balance, request, id;
-
+    std::cout << "Digite a operação desejada: ";
     std::getline(std::cin, operation);
     if (operation == "GET" || operation == "DELETE") {
+
+        std::cout << "Digite o id:";
+
         std::getline(std::cin, id);
+
 
         request = "{\"operation\":\"" + operation +
                   "\",\"id\":" + id + "}";
     } else if(operation == "POST"){
+
+        std::cout << "Digite o nome:";
         std::getline(std::cin, name);
+
+        std::cout << "Digite o endereço:";
         std::getline(std::cin, address);
+
+        std::cout << "Digite o saldo:";
         std::getline(std::cin, balance);
 
         request = "{\"operation\":\"" + operation +
@@ -39,9 +49,17 @@ std::string getRequest() {
                   "\", \"balance\":" + balance +
                   "}";
     } else if(operation == "PUT") {
+
+        std::cout << "Digite o id:";
         std::getline(std::cin, id);
+
+        std::cout << "Digite o nome:";
         std::getline(std::cin, name);
+
+        std::cout << "Digite o endereço:";
         std::getline(std::cin, address);
+
+        std::cout << "Digite o saldo:";
         std::getline(std::cin, balance);
 
         request = "{\"operation\":\"" + operation +
