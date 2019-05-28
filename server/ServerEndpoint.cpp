@@ -34,8 +34,6 @@ int available_threads = NUM_THREADS;
 // ID for accounts
 long global_id = 0;
 
-Logger logger;
-
 // Global socket queue to be used by threads
 queue<ServerSocket*> socket_FIFO_queue;
 
@@ -82,6 +80,8 @@ void* create_ephemeral_thread(void* arg) {
     socket_FIFO_queue.pop();
     pthread_mutex_unlock(&sock_queue_mutex);
 
+    Logger logger;
+
     std::string request;
     try {
         // Read request from socket
@@ -109,8 +109,13 @@ void* create_ephemeral_thread(void* arg) {
 
 void* work_on_request(void *id) {
     std::ostringstream ss;
-    ss << *(long*) id;
+    ss << (long) id;
     string thread_id = ss.str();
+
+    Logger logger;
+
+    logger.write_to_log("Criando thread " + thread_id + " no pool de threads.");
+    logger.flush_logs_to_file();
     // Blocks until the condition signal is received and return code is 0 (successful).
     while (!pthread_cond_wait(&work_cond, &sock_queue_mutex)) {
         /*
@@ -182,11 +187,8 @@ int main() {
     // Initialize thread pool
     for (long i = 0; i < NUM_THREADS; ++i) {
         pthread_t new_thread;
-        
-        logger.write_to_log("Criando thread " + std::to_string(i) + " no pool de threads.");
-        logger.flush_logs_to_file();
-        
-        pthread_create(&new_thread, nullptr, work_on_request, (void*) &i);
+        long tid = i;
+        pthread_create(&new_thread, nullptr, work_on_request, (void*) tid);
     }
 
 
