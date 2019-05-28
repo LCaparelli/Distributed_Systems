@@ -6,6 +6,7 @@
 #include <fstream>
 #include <pthread.h>
 #include <sstream>
+#include <ctime>
 
 class Logger {
 public:
@@ -16,7 +17,7 @@ private:
     std::stringstream buffer;
     std::ofstream log_file;
     pthread_mutex_t log_mutex;
-
+    std::time_t get_timestamp;
 };
 
 #endif //EPDSID2_LOGGER_H
