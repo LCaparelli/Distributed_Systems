@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include "../socket/SocketException.h"
 #include "ServerEndpoint.h"
+#include "Logger.h"
 #include <sys/socket.h>
 #include <queue>
 #include <set>
@@ -32,6 +33,8 @@ int available_threads = NUM_THREADS;
 
 // ID for accounts
 long global_id = 0;
+
+Logger logger;
 
 // Global socket queue to be used by threads
 queue<ServerSocket*> socket_FIFO_queue;
@@ -83,20 +86,26 @@ void* create_ephemeral_thread(void* arg) {
     try {
         // Read request from socket
         *sock >> request;
+        logger.write_to_log("Thread efêmera recebendo requisição: " + request);
         if (!request.empty()) {
             // Process request and stores response
             std::string response = processRequest(request);
             // Writes response to socket stream
+            logger.write_to_log("Resposta: " + response);
             *sock << response;
         }
     } catch (SocketException& e) {
+        logger.write_to_log(e.description());
         sock->close();
     }
     // Dies as its work is done and it doesn't belong to the original pool
     pthread_exit(nullptr);
 }
 
-void* work_on_request(void *arg) {
+void* work_on_request(void *id) {
+    std::ostringstream ss;
+    ss << *(long*) id;
+    string thread_id = ss.str();
     // Blocks until the condition signal is received and return code is 0 (successful).
     while (!pthread_cond_wait(&work_cond, &sock_queue_mutex)) {
         /*
@@ -117,6 +126,7 @@ void* work_on_request(void *arg) {
 
         pthread_mutex_lock(&thread_count_mutex);
         available_threads--;
+        logger.write_to_log("Removendo thread " + thread_id + " do pool de threads.");
         pthread_mutex_unlock(&thread_count_mutex);
 
         auto* sock = socket_FIFO_queue.front();
@@ -127,18 +137,22 @@ void* work_on_request(void *arg) {
         try {
             // Read request from socket
             *sock >> request;
+            logger.write_to_log("Thread com id "+ thread_id + " recebendo requisição: " + request);
             if (!request.empty()) {
                 // Process request and stores response
                 std::string response = processRequest(request);
+                logger.write_to_log("Resposta: " + response);
                 // Writes response to socket stream
                 *sock << response;
             }
         } catch (SocketException& e) {
+            logger.write_to_log(e.description());
             sock->close();
         }
 
         pthread_mutex_lock(&thread_count_mutex);
         available_threads++;
+        logger.write_to_log("Inserindo thread " + thread_id + " do pool de threads.");
         pthread_mutex_unlock(&thread_count_mutex);
     }
 }
@@ -154,9 +168,9 @@ int main() {
     pthread_cond_init(&work_cond, nullptr);
 
     // Initialize thread pool
-    for (int i = 0; i < NUM_THREADS; ++i) {
+    for (long i = 0; i < NUM_THREADS; ++i) {
         pthread_t new_thread;
-        pthread_create(&new_thread, nullptr, work_on_request, nullptr);
+        pthread_create(&new_thread, nullptr, work_on_request, (void*) i);
     }
 
 
