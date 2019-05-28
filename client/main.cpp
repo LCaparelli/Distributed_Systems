@@ -31,7 +31,7 @@ std::string getRequest() {
     std::getline(std::cin, operation);
     if (operation == "GET" || operation == "DELETE") {
 
-        std::cout << "Digite o id:";
+        std::cout << "Digite o id: ";
 
         std::getline(std::cin, id);
 
@@ -40,13 +40,13 @@ std::string getRequest() {
                   "\",\"id\":" + id + "}";
     } else if(operation == "POST"){
 
-        std::cout << "Digite o nome:";
+        std::cout << "Digite o nome: ";
         std::getline(std::cin, name);
 
-        std::cout << "Digite o endereço:";
+        std::cout << "Digite o endereço: ";
         std::getline(std::cin, address);
 
-        std::cout << "Digite o saldo:";
+        std::cout << "Digite o saldo: ";
         std::getline(std::cin, balance);
 
         if (!is_digits(balance)) {
@@ -61,16 +61,16 @@ std::string getRequest() {
                   "}";
     } else if(operation == "PUT") {
 
-        std::cout << "Digite o id:";
+        std::cout << "Digite o id: ";
         std::getline(std::cin, id);
 
-        std::cout << "Digite o nome:";
+        std::cout << "Digite o nome: ";
         std::getline(std::cin, name);
 
-        std::cout << "Digite o endereço:";
+        std::cout << "Digite o endereço: ";
         std::getline(std::cin, address);
 
-        std::cout << "Digite o saldo:";
+        std::cout << "Digite o saldo: ";
         std::getline(std::cin, balance);
 
         if (!is_digits(balance)) {
