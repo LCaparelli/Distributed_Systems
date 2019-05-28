@@ -1,7 +1,3 @@
-//
-// Created by danil on 27/05/2019.
-//
-
 #ifndef EPDSID2_LOGGER_H
 #define EPDSID2_LOGGER_H
 
@@ -14,16 +10,12 @@
 class Logger {
 public:
     void write_to_log(std::string log_entry);
-
+    void flush_logs_to_file();
 
 private:
     std::stringstream buffer;
     std::ofstream log_file;
     pthread_mutex_t log_mutex;
-    void flush_to_file();
-    int get_stream_size(std::stringstream& ss);
-
-
 };
 
 #endif //EPDSID2_LOGGER_H

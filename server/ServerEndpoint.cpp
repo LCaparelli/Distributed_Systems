@@ -86,12 +86,17 @@ void* create_ephemeral_thread(void* arg) {
     try {
         // Read request from socket
         *sock >> request;
+
         logger.write_to_log("Thread efêmera recebendo requisição: " + request);
+
         if (!request.empty()) {
             // Process request and stores response
             std::string response = processRequest(request);
             // Writes response to socket stream
+
             logger.write_to_log("Resposta: " + response);
+            logger.flush_logs_to_file();
+
             *sock << response;
         }
     } catch (SocketException& e) {
@@ -126,7 +131,10 @@ void* work_on_request(void *id) {
 
         pthread_mutex_lock(&thread_count_mutex);
         available_threads--;
+
         logger.write_to_log("Removendo thread " + thread_id + " do pool de threads.");
+        logger.flush_logs_to_file();
+
         pthread_mutex_unlock(&thread_count_mutex);
 
         auto* sock = socket_FIFO_queue.front();
@@ -142,6 +150,7 @@ void* work_on_request(void *id) {
                 // Process request and stores response
                 std::string response = processRequest(request);
                 logger.write_to_log("Resposta: " + response);
+                logger.flush_logs_to_file();
                 // Writes response to socket stream
                 *sock << response;
             }
@@ -152,7 +161,10 @@ void* work_on_request(void *id) {
 
         pthread_mutex_lock(&thread_count_mutex);
         available_threads++;
+
         logger.write_to_log("Inserindo thread " + thread_id + " do pool de threads.");
+        logger.flush_logs_to_file();
+
         pthread_mutex_unlock(&thread_count_mutex);
     }
 }
@@ -170,7 +182,9 @@ int main() {
     // Initialize thread pool
     for (long i = 0; i < NUM_THREADS; ++i) {
         pthread_t new_thread;
-        pthread_create(&new_thread, nullptr, work_on_request, (void*) i);
+        logger.write_to_log("Criando thread " + std::to_string(i) + " no pool de threads.");
+        logger.flush_logs_to_file();
+        pthread_create(&new_thread, nullptr, work_on_request, (void*) &i);
     }
 
 
