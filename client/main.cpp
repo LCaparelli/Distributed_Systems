@@ -1,15 +1,17 @@
 #include <iostream>
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include "../socket/ClientSocket.h"
 #include "../socket/SocketException.h"
 
 std::string getRequest();
 
 int main() {
-    ClientSocket client_socket("localhost", 8080);
 
     auto request = getRequest();
+
+    ClientSocket client_socket("localhost", 8080);
 
     client_socket << request;
     client_socket >> request;
@@ -21,8 +23,10 @@ int main() {
 }
 
 
-bool is_digits(const std::string &str) {
-    return std::all_of(str.begin(), str.end(), ::isdigit);
+bool is_float( const std::string &in) {
+    std::stringstream sstr(in);
+    float f;
+    return bool(sstr >> f);
 }
 
 std::string getRequest() {
@@ -40,16 +44,16 @@ std::string getRequest() {
                   "\",\"id\":" + id + "}";
     } else if(operation == "POST"){
 
-        std::cout << "Digite o nome:";
+        std::cout << "Digite o nome: ";
         std::getline(std::cin, name);
 
-        std::cout << "Digite o endereço:";
+        std::cout << "Digite o endereço: ";
         std::getline(std::cin, address);
 
-        std::cout << "Digite o saldo:";
+        std::cout << "Digite o saldo: ";
         std::getline(std::cin, balance);
 
-        if (!is_digits(balance)) {
+        if (!is_float(balance)) {
             std::cerr << "Valor inválido, \"balance\" deve conter somente dígitos.";
             exit(1);
         }
@@ -73,7 +77,7 @@ std::string getRequest() {
         std::cout << "Digite o saldo:";
         std::getline(std::cin, balance);
 
-        if (!is_digits(balance)) {
+        if (!is_float(balance)) {
             std::cerr << "Valor inválido, \"balance\" deve conter somente dígitos.";
             exit(1);
         }
