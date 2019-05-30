@@ -16,10 +16,8 @@ int main() {
     client_socket << request;
     client_socket >> request;
 
-    std::cout << request << std::endl;
-
-    return 0;
-
+        std::cout << request << "\n\n";
+    }
 }
 
 
@@ -35,7 +33,7 @@ std::string getRequest() {
     std::getline(std::cin, operation);
     if (operation == "GET" || operation == "DELETE") {
 
-        std::cout << "Digite o id:";
+        std::cout << "Digite o id: ";
 
         std::getline(std::cin, id);
 
@@ -65,16 +63,16 @@ std::string getRequest() {
                   "}";
     } else if(operation == "PUT") {
 
-        std::cout << "Digite o id:";
+        std::cout << "Digite o id: ";
         std::getline(std::cin, id);
 
-        std::cout << "Digite o nome:";
+        std::cout << "Digite o nome: ";
         std::getline(std::cin, name);
 
-        std::cout << "Digite o endereço:";
+        std::cout << "Digite o endereço: ";
         std::getline(std::cin, address);
 
-        std::cout << "Digite o saldo:";
+        std::cout << "Digite o saldo: ";
         std::getline(std::cin, balance);
 
         if (!is_float(balance)) {
