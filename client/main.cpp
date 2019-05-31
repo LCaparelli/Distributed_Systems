@@ -16,12 +16,11 @@ int main() {
     client_socket << request;
     client_socket >> request;
 
-        std::cout << request << "\n\n";
-    }
+    std::cout << request << "\n\n";
 }
 
 
-bool is_float( const std::string &in) {
+bool is_float(const std::string &in) {
     std::stringstream sstr(in);
     float f;
     return bool(sstr >> f);
@@ -40,7 +39,7 @@ std::string getRequest() {
 
         request = "{\"operation\":\"" + operation +
                   "\",\"id\":" + id + "}";
-    } else if(operation == "POST"){
+    } else if (operation == "POST") {
 
         std::cout << "Digite o nome: ";
         std::getline(std::cin, name);
@@ -61,7 +60,7 @@ std::string getRequest() {
                   "\",\"address\":\"" + address +
                   "\", \"balance\":" + balance +
                   "}";
-    } else if(operation == "PUT") {
+    } else if (operation == "PUT") {
 
         std::cout << "Digite o id: ";
         std::getline(std::cin, id);

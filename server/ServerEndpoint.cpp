@@ -12,7 +12,7 @@
 #include <queue>
 #include <set>
 
-#define NUM_THREADS 10
+#define NUM_THREADS 25
 
 using json = nlohmann::json;
 using namespace std;
@@ -36,6 +36,8 @@ long global_id = 0;
 
 // Global socket queue to be used by threads
 queue<ServerSocket*> socket_FIFO_queue;
+
+void return_thread_to_pool(const string &thread_id, Logger &logger);
 
 std::string process_request(std::string &request) {
     // Parse request string into json object
@@ -102,6 +104,7 @@ void* create_ephemeral_thread(void* arg) {
     } catch (SocketException& e) {
         logger.write_to_log(e.description());
         sock->close();
+        pthread_exit(nullptr);
     }
     // Dies as its work is done and it doesn't belong to the original pool
     pthread_exit(nullptr);
@@ -162,16 +165,20 @@ void* work_on_request(void *id) {
         } catch (SocketException& e) {
             logger.write_to_log(e.description());
             sock->close();
+            return_thread_to_pool(thread_id, logger);
         }
-
-        pthread_mutex_lock(&thread_count_mutex);
-        available_threads++;
-
-        logger.write_to_log("Inserindo thread " + thread_id + " do pool de threads.");
-        logger.flush_logs_to_file();
-
-        pthread_mutex_unlock(&thread_count_mutex);
+        return_thread_to_pool(thread_id, logger);
     }
+}
+
+void return_thread_to_pool(const string &thread_id, Logger &logger) {
+    pthread_mutex_lock(&thread_count_mutex);
+    available_threads++;
+
+    logger.write_to_log("Inserindo thread " + thread_id + " do pool de threads.");
+    logger.flush_logs_to_file();
+
+    pthread_mutex_unlock(&thread_count_mutex);
 }
 
 
