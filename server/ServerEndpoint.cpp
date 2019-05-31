@@ -103,9 +103,8 @@ void* create_ephemeral_thread(void* arg) {
         }
     } catch (SocketException& e) {
         logger.write_to_log(e.description());
-        sock->close();
-        pthread_exit(nullptr);
     }
+    sock->close();
     // Dies as its work is done and it doesn't belong to the original pool
     pthread_exit(nullptr);
 }
@@ -164,9 +163,8 @@ void* work_on_request(void *id) {
             }
         } catch (SocketException& e) {
             logger.write_to_log(e.description());
-            sock->close();
-            return_thread_to_pool(thread_id, logger);
         }
+        sock->close();
         return_thread_to_pool(thread_id, logger);
     }
 }
