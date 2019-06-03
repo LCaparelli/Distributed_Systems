@@ -6,7 +6,7 @@
 #include <chrono>
 #include <cstring>
 
-#define LOG_PATH "../logs/logs.txt"
+#define LOGS_PATH "../logs/"
 
 std::string Logger::get_timestamp() {
     std::time_t current_time = std::time(nullptr);
@@ -23,7 +23,7 @@ void Logger::write_to_log(std::string log_entry) {
 //writes the contents of the buffer to a file
 void Logger::flush_logs_to_file() {
     pthread_mutex_lock(&log_mutex);
-    log_file.open (LOG_PATH, std::ios_base::app);
+    log_file.open (LOGS_PATH, std::ios_base::app);
     log_file << buffer.str();
     log_file.close();
     pthread_mutex_unlock(&log_mutex);

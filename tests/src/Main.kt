@@ -6,6 +6,7 @@ import java.net.InetAddress
 import java.net.Socket
 import java.util.*
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
@@ -18,8 +19,9 @@ fun main(args: Array<String>) {
                     balance = Random().nextFloat())
             )
         }
-        Thread.sleep(10)
+        Thread.sleep(15)
     }
+    exitProcess(0);
 }
 
 
