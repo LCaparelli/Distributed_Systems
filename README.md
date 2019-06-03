@@ -225,3 +225,23 @@ O servidor possui um log em logs/log.txt. Este arquivo é criado automaticamnete
   - Remoção de *thread* no *pool*;
   - Início do processamento de uma requisição;
   - Fim do processamento de uma requisição;
+  
+# Teste de carga
+
+Foi feito um programa implementado em Kotlin, linguagem de programação multi-paradigma que é compilada em bytecode Java para posteriormente ser interpretado por uma JVM (Java Virtual Machine). A suíte realiza 1000 requisições com um intervalo de 15 ms entre cada uma. Este intervalo tem como propósito evitar problemas de escrita no *socket* causados pela limitação de recursos das máquinas nas quais o programa será executado. De qualquer maneira a requisição não é tratada em menos de 15 ms, de forma que o servidor trata mais de uma requisição ao mesmo tempo. Para os testes escolheu-se a operação POST, operação de escrita mais custosa disponível.
+                      
+Para demais testes não relacionados à carga recomenda-se o uso do cliente em C/C++.
+
+Para executar a suíte de testes é necessário que um *runtime* Java de versão 1.8 ou maior esteja instalado, como a openjdk 1.8.
+
+Execute no terminal:
+
+> $ java -jar tests/out/tests.jar
+
+Para comodidade de execução foi disponibilizado um arquivo .jar que pode ser utilizado para rodar a suíte. Caso seja preferível pode-se fazer uso do compilador kotlin também inserido por questão de comodidade, no diretório kotlinc. Para compilar a classe execute:
+
+> $ kotlinc/bin/kotlinc tests/src/Main.kt -include-runtime -d tests/out/tests.jar
+
+E então executar o programa:
+
+> $ java -jar tests/out/tests.jar
