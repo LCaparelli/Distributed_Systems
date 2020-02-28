@@ -5,20 +5,30 @@
 #include "../socket/ClientSocket.h"
 #include "../socket/SocketException.h"
 
-std::string getRequest();
-
-int main() {
-
-    auto request = getRequest();
-
-    ClientSocket client_socket("localhost", 8080);
-
-    client_socket << request;
-    client_socket >> request;
-
-    std::cout << request << "\n\n";
+void panic_on_invalid_port() {
+    std::string error = "Porta inválida! A porta deve ser um inteiro contido no intervalo [1:65535].";
+    std::cerr << error;
+    exit(1);
 }
 
+void panic_on_incorrect_usage() {
+    std::string error = "Uso indevido. Operações permitidas:\n"
+                        "GET|DELETE\n"
+                        "<id>\n"
+                        "***********************************\n"
+                        "POST\n"
+                        "<nome>\n"
+                        "<endereço>\n"
+                        "<saldo>\n"
+                        "***********************************\n"
+                        "PUT\n"
+                        "<id>\n"
+                        "<nome>\n"
+                        "<endereço>\n"
+                        "<saldo>\n";
+    std::cerr << error;
+    exit(1);
+}
 
 bool is_float(const std::string &in) {
     std::stringstream sstr(in);
@@ -86,22 +96,28 @@ std::string getRequest() {
                   "\", \"balance\":" + balance +
                   "}";
     } else {
-        std::string error = "Uso indevido. Operações permitidas:\n"
-                            "GET|DELETE\n"
-                            "<id>\n"
-                            "***********************************\n"
-                            "POST\n"
-                            "<nome>\n"
-                            "<endereço>\n"
-                            "<saldo>\n"
-                            "***********************************\n"
-                            "PUT\n"
-                            "<id>\n"
-                            "<nome>\n"
-                            "<endereço>\n"
-                            "<saldo>\n";
-        std::cerr << error;
-        exit(1);
+        panic_on_incorrect_usage();
     }
+
     return request;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2 || argc > 3) panic_on_incorrect_usage();
+
+    int port = 8080;
+    std::string server = argv[1];
+
+    if (argc == 3) port = atoi(argv[2]);
+    if (port == 0) panic_on_invalid_port();
+
+    auto request = getRequest();
+
+    ClientSocket client_socket(server, port);
+
+    client_socket << request;
+    client_socket >> request;
+
+    std::cout << request << "\n\n";
+    return 0;
 }
